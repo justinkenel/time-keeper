@@ -1,0 +1,35 @@
+package com.timekeep.data;
+
+import sun.org.mozilla.javascript.internal.ScriptRuntime;
+
+public class Employee {
+  public final String name;
+  public final String group;
+  public final Iterable<Entry> entryList;
+  public final Iterable<Rate> rateList;
+
+  public Employee() {
+    this(null, null, null, null);
+  }
+
+  public Employee(String name, String group, Iterable<Entry> entryList, Iterable<Rate> rateList) {
+    this.name = name;
+    this.group = group;
+    this.entryList = entryList;
+    this.rateList = rateList;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof Employee &&
+        name.equals(((Employee) o).name) &&
+        group.equals(((Employee) o).group) &&
+        entryList.equals(((Employee) o).entryList) &&
+        rateList.equals(((Employee) o).rateList);
+  }
+
+  @Override
+  public String toString() {
+    return "[Employee name="+name+" group="+group+" entryList="+entryList+" rateList="+rateList+"]";
+  }
+}
