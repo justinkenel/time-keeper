@@ -1,14 +1,12 @@
 package com.timekeep.data;
 
-public class Group {
-  public final String name;
-
+public class Group extends NamedItem {
   public Group() {
     this(null);
   }
 
   public Group(String name) {
-    this.name = name;
+    super(name);
   }
 
   @Override

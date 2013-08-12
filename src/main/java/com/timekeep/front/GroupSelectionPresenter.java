@@ -2,6 +2,7 @@ package com.timekeep.front;
 
 import com.timekeep.back.GroupService;
 import com.timekeep.data.Group;
+import com.timekeep.data.NamedItem;
 import com.timekeep.front.util.ComponentFillLayout;
 
 import javax.swing.*;
@@ -9,15 +10,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GroupSelectionPresenter {
-  private final static GroupListPresenter groupListPresenter;
+  private final static ItemListPresenter groupListPresenter;
   private final static JButton createGroupButton;
 
   public static JPanel view;
 
   static {
-    groupListPresenter = GroupListPresenter.build(new GroupListPresenter.GroupSelectionHandler() {
+    groupListPresenter = ItemListPresenter.build(new ItemListPresenter.ItemSelectionHandler<Group>() {
       @Override
-      public void selectGroup(Group g) {
+      public void selectItem(Group g) {
         System.out.println("Selected Group: " + g.name);
         SelectedItemPresenter.presentGroup(g);
       }
@@ -40,7 +41,7 @@ public class GroupSelectionPresenter {
         addGivenComponent(createGroupButton).
         build());
 
-    groupListPresenter.setGroups(GroupService.getGroups());
+    groupListPresenter.setItems(GroupService.getGroups());
   }
 
   public static void clearSelection() {
@@ -48,6 +49,6 @@ public class GroupSelectionPresenter {
   }
 
   public static void addGroup(Group group) {
-    groupListPresenter.addGroup(group);
+    groupListPresenter.setItems(GroupService.getGroups());
   }
 }
