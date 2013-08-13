@@ -29,7 +29,7 @@ public class GroupConnector {
     Group group = new Group(name);
     GroupService.store(group);
     GroupSelectionPresenter.addGroup(group);
-    PrimaryPresenter.refresh();
+    //PrimaryPresenter.refresh();
     return group;
   }
 }

@@ -30,7 +30,8 @@ public class SelectedItemPresenter {
   }
 
   public static void presentEmployee(Employee employee) {
-
+    EmployeeFormPresenter.presentEmployee(employee);
+    showView(EmployeeFormPresenter.view);
   }
 
   private static void showView(Component component) {

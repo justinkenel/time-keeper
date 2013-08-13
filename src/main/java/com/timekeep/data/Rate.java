@@ -1,6 +1,8 @@
 package com.timekeep.data;
 
-public class Rate {
+import java.io.Serializable;
+
+public class Rate implements Serializable {
   public final StrictDate start;
 
   /* important to know that this is 100 * actual rate */

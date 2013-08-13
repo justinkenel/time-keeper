@@ -17,6 +17,7 @@ public class SelectionPresenter {
       @Override
       public void stateChanged(ChangeEvent e) {
         GroupSelectionPresenter.clearSelection();
+        EmployeeSelectionPresenter.clearSelection();
         SelectedItemPresenter.presentNothing();
       }
     });

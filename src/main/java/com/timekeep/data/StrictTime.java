@@ -1,6 +1,8 @@
 package com.timekeep.data;
 
-public class StrictTime {
+import java.io.Serializable;
+
+public class StrictTime implements Serializable {
   public final int hour;
   public final int minute;
 

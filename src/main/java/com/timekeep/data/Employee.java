@@ -4,14 +4,14 @@ import sun.org.mozilla.javascript.internal.ScriptRuntime;
 
 public class Employee extends NamedItem {
   public final String group;
-  public final Iterable<Entry> entryList;
-  public final Iterable<Rate> rateList;
+  public final Entry[] entryList;
+  public final Rate[] rateList;
 
   public Employee() {
     this(null, null, null, null);
   }
 
-  public Employee(String name, String group, Iterable<Entry> entryList, Iterable<Rate> rateList) {
+  public Employee(String name, String group, Entry[] entryList, Rate[] rateList) {
     super(name);
     this.group = group;
     this.entryList = entryList;

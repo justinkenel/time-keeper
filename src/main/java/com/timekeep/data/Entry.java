@@ -1,6 +1,8 @@
 package com.timekeep.data;
 
-public class Entry {
+import java.io.Serializable;
+
+public class Entry implements Serializable {
   public final StrictDate date;
   public final StrictTime start;
   public final StrictTime end;

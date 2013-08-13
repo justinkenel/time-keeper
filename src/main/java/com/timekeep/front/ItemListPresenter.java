@@ -60,6 +60,6 @@ public class ItemListPresenter<T extends NamedItem> {
   }
 
   public static interface ItemSelectionHandler<T extends NamedItem> {
-    public void selectItem(T group);
+    public void selectItem(T item);
   }
 }

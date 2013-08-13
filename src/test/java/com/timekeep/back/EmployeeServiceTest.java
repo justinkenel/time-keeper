@@ -24,7 +24,7 @@ public class EmployeeServiceTest {
 
   @Test
   public void testRoundTrip() {
-    Employee employee = new Employee("name", "group", new ArrayList<Entry>(), new ArrayList<Rate>());
+    Employee employee = new Employee("name", "group", new Entry[0], new Rate[0]);
     EmployeeService.storeEmployee(employee);
 
     Employee retrievedEmployee = EmployeeService.getEmployee("name");
@@ -35,9 +35,9 @@ public class EmployeeServiceTest {
 
   @Test
   public void testGetEmployees() {
-    Employee employee1 = new Employee("name1", "group1", new ArrayList<Entry>(), new ArrayList<Rate>());
-    Employee employee2 = new Employee("name2", "group2", new ArrayList<Entry>(), new ArrayList<Rate>());
-    Employee employee3 = new Employee("name3", "group3", new ArrayList<Entry>(), new ArrayList<Rate>());
+    Employee employee1 = new Employee("name1", "group1", new Entry[0], new Rate[0]);
+    Employee employee2 = new Employee("name2", "group2", new Entry[0], new Rate[0]);
+    Employee employee3 = new Employee("name3", "group3", new Entry[0], new Rate[0]);
 
     EmployeeService.storeEmployee(employee1);
     EmployeeService.storeEmployee(employee2);
