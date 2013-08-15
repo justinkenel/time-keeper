@@ -3,6 +3,7 @@ package com.timekeep.front;
 import com.timekeep.back.GroupService;
 import com.timekeep.connect.EmployeeConnector;
 import com.timekeep.data.Employee;
+import com.timekeep.data.Entry;
 import com.timekeep.data.Group;
 import com.timekeep.front.util.FillComponent;
 
@@ -18,6 +19,8 @@ public class EmployeeFormPresenter {
   private static JComboBox groupField;
 
   private static JButton button;
+
+  private static EditableRowTablePresenter<Entry> entryTable;
 
   static {
     button = new JButton("Create");
@@ -43,11 +46,18 @@ public class EmployeeFormPresenter {
     rateField = new JTextField();
     groupField = new JComboBox();
 
-    view = FillComponent.formBuilder(button).
+    JPanel form = FillComponent.formBuilder(button).
         addInput("Name", nameField).
         addInput("Rate", rateField).
         addInput("Group", groupField).
         build();
+
+    view = form;
+
+    //view = FillComponent.verticalFillBuilder().
+        //addGivenComponent(form).
+        //addCalculatedComponent(entryTable.view).
+        //build();
   }
 
   public static void presentEmployee(Employee employee) {

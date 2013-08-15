@@ -1,7 +1,9 @@
 package com.timekeep.back;
 
+import org.mapdb.Bind;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
+import org.mapdb.Fun;
 
 import java.io.File;
 import java.io.Serializable;
@@ -29,6 +31,45 @@ public class StorageService {
   public static StorageAccess buildStorageAccess(String name) {
     Map<String, StorageObject> storageMap = db.getTreeMap(name);
     return new StorageAccess(storageMap);
+  }
+
+  public static MultiStorageAccess buildMultiStorageAccess(String name) {
+    Map<String, StorageObject[]> map = db.getTreeMap(name);
+    return new MultiStorageAccess(map);
+  }
+
+  public static StorageObjectListConverter buildStorageObjectListConverter(Class<?> conversionClass) {
+    StorageObjectConverter storageObjectConverter = buildStorageObjectConverter(conversionClass);
+    return new StorageObjectListConverter(storageObjectConverter);
+  }
+
+  public static class MultiStorageAccess {
+    public final Map<String, StorageObject[]> map;
+
+    public MultiStorageAccess(Map<String, StorageObject[]> map) {
+      this.map = map;
+    }
+
+    public void store(String identifier, StorageObjectList storageObjectList) {
+      int size = storageObjectList.getSize();
+      StorageObject[] storageObjects = storageObjectList.objectList.toArray(new StorageObject[size]);
+      map.put(identifier, storageObjects);
+      db.commit();
+    }
+
+    public StorageObjectList retrieve(String identifier) {
+      StorageObject[] storageObjects = map.get(identifier);
+      ArrayList<StorageObject> storageObjectsList = new ArrayList<>(storageObjects.length);
+      for(StorageObject storageObject : storageObjects) {
+        storageObjectsList.add(storageObject);
+      }
+      return new StorageObjectList(storageObjectsList);
+    }
+
+    public void clear() {
+      map.clear();
+      db.commit();
+    }
   }
 
   public static <T> StorageObjectConverter<T> buildStorageObjectConverter(Class<T> objectClass) {
@@ -97,6 +138,32 @@ public class StorageService {
 
     public StorageObject get(int index) {
       return objectList.get(index);
+    }
+  }
+
+  public static class StorageObjectListConverter<T> {
+    private StorageObjectConverter<T> storageObjectConverter;
+
+    private StorageObjectListConverter(StorageObjectConverter<T> storageObjectConverter) {
+      this.storageObjectConverter = storageObjectConverter;
+    }
+
+    public StorageObjectList convertToStorageObjectList(Iterable<T> iterable) {
+      ArrayList<StorageObject> list = new ArrayList<StorageObject>();
+      for(T t : iterable) {
+        StorageObject storageObject = storageObjectConverter.convertToStorageObject(t);
+        list.add(storageObject);
+      }
+      return new StorageObjectList(list);
+    }
+
+    public Iterable<T> convertFromStorageObjectList(StorageObjectList storageObjectList) {
+      ArrayList<T> list = new ArrayList<T>(storageObjectList.getSize());
+      for(StorageObject storageObject : storageObjectList) {
+        T t = storageObjectConverter.convertFromStorageObject(storageObject);
+        list.add(t);
+      }
+      return list;
     }
   }
 

@@ -44,6 +44,10 @@ public class PropertiesService {
     return get("employee.database.name", "employee");
   }
 
+  public static String getRateDataName() {
+    return get("employee.rate.database.name", "rate");
+  }
+
   public static String getGroupDatabaseName() {
     return get("group.database.name", "group");
   }
