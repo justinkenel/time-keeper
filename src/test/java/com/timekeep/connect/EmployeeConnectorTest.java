@@ -2,8 +2,10 @@ package com.timekeep.connect;
 
 import com.timekeep.back.DateService;
 import com.timekeep.back.EmployeeService;
+import com.timekeep.back.EntryService;
 import com.timekeep.back.RateService;
 import com.timekeep.data.Employee;
+import com.timekeep.data.Entry;
 import com.timekeep.data.Rate;
 import org.junit.After;
 import org.junit.Assert;
@@ -17,6 +19,7 @@ public class EmployeeConnectorTest {
   public void after() {
     EmployeeService.clear();
     RateService.clear();
+    EntryService.clear();
   }
 
   @Test
@@ -35,5 +38,8 @@ public class EmployeeConnectorTest {
 
     Assert.assertEquals(expectedRateList, RateService.retrieve("employee-name"));
     Assert.assertEquals(expected, EmployeeService.getEmployee("employee-name"));
+
+    Iterable<Entry> entryList = EntryService.retrieve("employee-name");
+    Assert.assertFalse(entryList.iterator().hasNext());
   }
 }

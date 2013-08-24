@@ -1,5 +1,7 @@
 package com.timekeep.front;
 
+import com.timekeep.back.DateService;
+import com.timekeep.back.EntryService;
 import com.timekeep.back.GroupService;
 import com.timekeep.back.RateService;
 import com.timekeep.connect.EmployeeConnector;
@@ -12,7 +14,6 @@ import com.timekeep.front.util.FillComponent;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 public class EmployeeFormPresenter {
   public static JPanel view;
@@ -34,7 +35,7 @@ public class EmployeeFormPresenter {
         String rateString = rateField.getText();
         String[] parts = rateString.split("\\.");
         int rateValue = Integer.parseInt(parts[0]) * 100;
-        if(parts.length == 2) {
+        if (parts.length == 2) {
           rateValue += Integer.parseInt(parts[1]) % 100;
         }
 
@@ -57,10 +58,23 @@ public class EmployeeFormPresenter {
 
     view = form;
 
-    //view = FillComponent.verticalFillBuilder().
-        //addGivenComponent(form).
-        //addCalculatedComponent(entryTable.view).
-        //build();
+    entryTable = EditableRowTablePresenter.<Entry>builder().
+        addHeader("Date").
+        setEntityToRowConverter(new EditableRowTablePresenter.EntityToRowConverter<Entry>() {
+          @Override
+          public String[] convertToRow(Entry entity) {
+            return new String[]{DateService.standardString(entity.date)};
+          }
+        }).build();
+
+    //view = FillComponent.horizontalFillBuilder().addCalculatedComponent(form).build();
+
+    view = FillComponent.verticalFillBuilder().
+        addGivenComponent(form).
+        addCalculatedComponent(entryTable.view).
+        build();
+
+    //view = entryTable.view;
   }
 
   public static void presentEmployee(Employee employee) {
@@ -78,6 +92,11 @@ public class EmployeeFormPresenter {
     rateField.setEnabled(false);
     groupField.setEnabled(false);
 
+    Iterable<Entry> entryList = EntryService.retrieve(employee.name);
+    entryTable.setValues(entryList);
+
+    entryTable.view.setVisible(true);
+
     button.setVisible(false);
   }
 
@@ -86,7 +105,7 @@ public class EmployeeFormPresenter {
     rateField.setText("");
 
     DefaultComboBoxModel model = new DefaultComboBoxModel();
-    for(Group group : GroupService.getGroups()) {
+    for (Group group : GroupService.getGroups()) {
       model.addElement(group.name);
     }
 
@@ -97,5 +116,7 @@ public class EmployeeFormPresenter {
     groupField.setEnabled(true);
 
     button.setVisible(true);
+
+    entryTable.view.setVisible(false);
   }
 }

@@ -1,5 +1,7 @@
 package com.timekeep.front;
 
+import com.timekeep.front.util.FillComponent;
+
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -9,13 +11,13 @@ import java.util.List;
 import java.util.Vector;
 
 public class EditableRowTablePresenter<T> {
-  public final JTable view;
+  public final JPanel view;
   private final DefaultTableModel tableModel;
   private final EntityToRowConverter<T> entityToRowConverter;
   private final RowChangeHandler<T> rowChangeHandler;
   private final Vector<String> headers;
 
-  private EditableRowTablePresenter(JTable view, DefaultTableModel tableModel,
+  private EditableRowTablePresenter(JPanel view, DefaultTableModel tableModel,
                                     EntityToRowConverter<T> entityToRowConverter,
                                     RowChangeHandler<T> rowChangeHandler,
                                     RowCellEditorCreator<T> rowCellEditorCreator,
@@ -68,22 +70,32 @@ public class EditableRowTablePresenter<T> {
       JTable jtable = new JTable(model);
 
       Vector<String> headerVector = new Vector<String>(headers.size());
-      for(String header : headers) {
+      for (String header : headers) {
         headerVector.add(header);
       }
 
-      return new EditableRowTablePresenter<K>(jtable, model, entityToRowConverter,
+      JScrollPane scrollPane = new JScrollPane(jtable);
+      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+      JPanel view = FillComponent.verticalFillBuilder().
+          addCalculatedComponent(scrollPane).
+          build();
+
+      return new EditableRowTablePresenter<K>(view, model, entityToRowConverter,
           rowChangeHandler, rowCellEditorCreator, headerVector);
     }
   }
 
   public static <T> Builder<T> builder() {
-    return new Builder<T>(null, null, null, new LinkedList<String>());
+    return new Builder<T>(null,
+        new DefaultRowChangeHandler<T>(),
+        new DefaultRowCellEditorCreator<T>(),
+        new LinkedList<String>());
   }
 
   public void setValues(Iterable<T> values) {
     final Vector<String[]> rowData = new Vector<String[]>();
-    for(T value : values) {
+    for (T value : values) {
       rowData.add(entityToRowConverter.convertToRow(value));
     }
     tableModel.setDataVector(rowData, headers);
@@ -92,8 +104,10 @@ public class EditableRowTablePresenter<T> {
       @Override
       public void tableChanged(TableModelEvent event) {
         int index = event.getFirstRow();
-        String[] data = rowData.elementAt(index);
-        rowChangeHandler.handleRowChange(data);
+        if (index >= 0) {
+          String[] data = rowData.elementAt(index);
+          rowChangeHandler.handleRowChange(data);
+        }
       }
     });
   }
@@ -106,7 +120,20 @@ public class EditableRowTablePresenter<T> {
     void handleRowChange(String[] row);
   }
 
+  private static class DefaultRowChangeHandler<K> implements RowChangeHandler<K> {
+    @Override
+    public void handleRowChange(String[] row) {
+    }
+  }
+
   public static interface RowCellEditorCreator<K> {
-    CellEditor[] getRowCellEditors();
+    CellEditor[] getRowCellEditors(String[] row);
+  }
+
+  private static class DefaultRowCellEditorCreator<K> implements RowCellEditorCreator<K> {
+    @Override
+    public CellEditor[] getRowCellEditors(String[] row) {
+      return new CellEditor[row.length];
+    }
   }
 }

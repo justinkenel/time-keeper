@@ -1,8 +1,7 @@
 package com.timekeep.front.util;
 
 import java.awt.*;
-import java.awt.List;
-import java.util.*;
+import java.util.LinkedList;
 
 public class FormFillLayout implements LayoutManager {
   final Component[] labels;
@@ -18,12 +17,14 @@ public class FormFillLayout implements LayoutManager {
 
   @Override
   public void layoutContainer(Container parent) {
+    System.out.println("layoutContainer FormFillLayout");
+
     int width = parent.getWidth();
 
     int yPosition = 5;
-    int halfWidth = width/2;
+    int halfWidth = width / 2;
 
-    for(int i=0; i<labels.length; ++i) {
+    for (int i = 0; i < labels.length; ++i) {
       Component label = labels[i];
       Component input = inputs[i];
 
@@ -41,7 +42,7 @@ public class FormFillLayout implements LayoutManager {
 
     Dimension buttonSize = button.getPreferredSize();
     button.setSize(buttonSize);
-    button.setLocation(halfWidth - buttonSize.width/2, yPosition);
+    button.setLocation(halfWidth - buttonSize.width / 2, yPosition);
   }
 
   public static FormFillBuilder builder(Component button) {
@@ -71,12 +72,31 @@ public class FormFillLayout implements LayoutManager {
     }
   }
 
-  @Override public void addLayoutComponent(String name, Component comp) {}
-
-  @Override public void removeLayoutComponent(Component comp) {}
-
-  @Override public Dimension preferredLayoutSize(Container parent) { return null; }
+  @Override
+  public void addLayoutComponent(String name, Component comp) {
+  }
 
   @Override
-  public Dimension minimumLayoutSize(Container parent) { return null; }
+  public void removeLayoutComponent(Component comp) {
+  }
+
+  @Override
+  public Dimension preferredLayoutSize(Container parent) {
+    int width = parent.getWidth();
+    int height = button.isVisible() ? button.getPreferredSize().height + 10 : 5;
+
+    for (int i = 0; i < inputs.length; ++i) {
+      Component input = inputs[i];
+      Component label = labels[i];
+
+      height += Math.max(input.getPreferredSize().getHeight(), label.getPreferredSize().getHeight()) + 5;
+    }
+
+    return new Dimension(width, height);
+  }
+
+  @Override
+  public Dimension minimumLayoutSize(Container parent) {
+    return null;
+  }
 }

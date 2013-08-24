@@ -1,9 +1,8 @@
 package com.timekeep.front.util;
 
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.awt.*;
-import java.util.ArrayList;
 
 public class ComponentFillLayout implements LayoutManager {
   private final Component[] components;
@@ -60,7 +59,7 @@ public class ComponentFillLayout implements LayoutManager {
     return new ComponentFillLayoutBuilder(direction, new LinkedList<Component>(), new LinkedList<FillType>());
   }
 
-  private ComponentFillLayout(Component[] components, FillType[] fillTypes, Direction direction){
+  private ComponentFillLayout(Component[] components, FillType[] fillTypes, Direction direction) {
     this.components = components;
     this.fillTypes = fillTypes;
     this.direction = direction;
@@ -88,10 +87,10 @@ public class ComponentFillLayout implements LayoutManager {
 
     int numberGiven = 0;
 
-    for(int i = 0; i < components.length; ++i) {
-      if(fillTypes[i] == FillType.SIZE_GIVEN) {
+    for (int i = 0; i < components.length; ++i) {
+      if (fillTypes[i] == FillType.SIZE_GIVEN) {
         totalGivenSize += components[i].getPreferredSize().getWidth();
-        numberGiven ++;
+        numberGiven++;
       }
     }
 
@@ -99,7 +98,7 @@ public class ComponentFillLayout implements LayoutManager {
         (width - totalGivenSize) / (components.length - numberGiven) : 0;
     int horizontalPosition = 0;
 
-    for(int i=0; i<components.length; ++i) {
+    for (int i = 0; i < components.length; ++i) {
       Component component = components[i];
       switch (fillTypes[i]) {
         case SIZE_GIVEN:
@@ -126,24 +125,25 @@ public class ComponentFillLayout implements LayoutManager {
 
     int numberGiven = 0;
 
-    for(int i = 0; i < components.length; ++i) {
-      if(fillTypes[i] == FillType.SIZE_GIVEN) {
+    for (int i = 0; i < components.length; ++i) {
+      if (fillTypes[i] == FillType.SIZE_GIVEN) {
         totalGivenSize += components[i].getPreferredSize().getHeight();
-        numberGiven ++;
+        numberGiven++;
       }
     }
 
     int fillableSize = numberGiven != components.length ?
-        (height - totalGivenSize) / (components.length - numberGiven) : 0 ;
+        (height - totalGivenSize) / (components.length - numberGiven) : 0;
     int verticalPosition = 0;
 
-    for(int i=0; i<components.length; ++i) {
+    for (int i = 0; i < components.length; ++i) {
       Component component = components[i];
       switch (fillTypes[i]) {
         case SIZE_GIVEN:
           Dimension size = component.getPreferredSize();
-          int horizontalPosition = (width - size.width) / 2;
-          component.setSize(size);
+          int componentWidth = size.width == 0 ? width : size.width;
+          int horizontalPosition = (width - componentWidth) / 2;
+          component.setSize(componentWidth, size.height);
           component.setLocation(horizontalPosition, verticalPosition);
           verticalPosition += component.getHeight();
           break;
@@ -157,14 +157,20 @@ public class ComponentFillLayout implements LayoutManager {
   }
 
   @Override
-  public void addLayoutComponent(String name, Component comp) {}
+  public void addLayoutComponent(String name, Component comp) {
+  }
 
   @Override
-  public void removeLayoutComponent(Component comp) {}
+  public void removeLayoutComponent(Component comp) {
+  }
 
   @Override
-  public Dimension preferredLayoutSize(Container parent) {return null;}
+  public Dimension preferredLayoutSize(Container parent) {
+    return null;
+  }
 
   @Override
-  public Dimension minimumLayoutSize(Container parent) {return null;}
+  public Dimension minimumLayoutSize(Container parent) {
+    return null;
+  }
 }
