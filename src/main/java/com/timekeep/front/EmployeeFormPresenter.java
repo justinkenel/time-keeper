@@ -1,15 +1,18 @@
 package com.timekeep.front;
 
 import com.timekeep.back.GroupService;
+import com.timekeep.back.RateService;
 import com.timekeep.connect.EmployeeConnector;
 import com.timekeep.data.Employee;
 import com.timekeep.data.Entry;
 import com.timekeep.data.Group;
+import com.timekeep.data.Rate;
 import com.timekeep.front.util.FillComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class EmployeeFormPresenter {
   public static JPanel view;
@@ -62,7 +65,10 @@ public class EmployeeFormPresenter {
 
   public static void presentEmployee(Employee employee) {
     nameField.setText(employee.name);
-    rateField.setText(String.valueOf(employee.rateList[employee.rateList.length-1].rate));
+
+    Iterable<Rate> rateList = RateService.retrieve(employee.name);
+    Rate rate = rateList.iterator().next();
+    rateField.setText(String.valueOf(rate.rate));
 
     DefaultComboBoxModel model = new DefaultComboBoxModel();
     model.addElement(employee.group);

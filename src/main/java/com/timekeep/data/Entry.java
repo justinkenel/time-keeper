@@ -12,4 +12,15 @@ public class Entry implements Serializable {
     this.start = start;
     this.end = end;
   }
+
+  public Entry() {
+    this(null, null, null);
+  }
+
+  public boolean equals(Object o) {
+    return o instanceof Entry &&
+        date.equals(((Entry) o).date) &&
+        start.equals(((Entry) o).start) &&
+        end.equals(((Entry) o).end);
+  }
 }

@@ -4,7 +4,7 @@ import com.timekeep.data.Rate;
 
 public class RateService {
   private static final StorageService.MultiStorageAccess multiStorageAccess;
-  private static final StorageService.StorageObjectListConverter storageObjectListConverter;
+  private static final StorageService.StorageObjectListConverter<Rate> storageObjectListConverter;
 
   static {
     String dbName = PropertiesService.getRateDataName();

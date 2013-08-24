@@ -2,12 +2,14 @@ package com.timekeep.connect;
 
 import com.timekeep.back.DateService;
 import com.timekeep.back.EmployeeService;
+import com.timekeep.back.RateService;
 import com.timekeep.data.Employee;
 import com.timekeep.data.Entry;
 import com.timekeep.data.Rate;
 import com.timekeep.data.StrictDate;
 import com.timekeep.front.EmployeeSelectionPresenter;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,10 +40,15 @@ public class EmployeeConnector {
 
   public Employee createAndStore() {
     Rate firstRate = new Rate(DateService.today(), rate);
-    Rate[] rateList = new Rate[] {firstRate};
-    Employee employee = new Employee(name, group, new Entry[0], rateList);
+    List<Rate> rateList = new ArrayList(1);
+    rateList.add(firstRate);
+    Employee employee = new Employee(name, group);
+
     EmployeeService.storeEmployee(employee);
+    RateService.store(name, rateList);
+
     EmployeeSelectionPresenter.addEmployee(employee);
+
     return employee;
   }
 }

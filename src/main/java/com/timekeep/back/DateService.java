@@ -25,4 +25,8 @@ public class DateService {
   public static StrictDate date(int year, int month, int day) {
     return new StrictDate(year, month, day);
   }
+
+  public static StrictTime time(int hour, int minute) {
+    return new StrictTime(hour, minute);
+  }
 }
