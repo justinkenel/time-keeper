@@ -14,6 +14,7 @@ import com.timekeep.front.util.FillComponent;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 public class EmployeeFormPresenter {
   public static JPanel view;
@@ -25,6 +26,8 @@ public class EmployeeFormPresenter {
   private static JButton button;
 
   private static EditableRowTablePresenter<Entry> entryTable;
+
+  private static ClockPresenter clock;
 
   static {
     button = new JButton("Create");
@@ -60,17 +63,27 @@ public class EmployeeFormPresenter {
 
     entryTable = EditableRowTablePresenter.<Entry>builder().
         addHeader("Date").
+        addHeader("Start").
+        addHeader("End").
         setEntityToRowConverter(new EditableRowTablePresenter.EntityToRowConverter<Entry>() {
           @Override
-          public String[] convertToRow(Entry entity) {
-            return new String[]{DateService.standardString(entity.date)};
+          public Vector<String> convertToRow(Entry entity) {
+            //return new String[]{DateService.standardString(entity.date)};
+            Vector<String> vector = new Vector<>();
+            vector.add(DateService.standardString(entity.date));
+            vector.add(DateService.standardString(entity.start));
+            vector.add(DateService.standardString(entity.end));
+            return vector;
           }
         }).build();
 
     //view = FillComponent.horizontalFillBuilder().addCalculatedComponent(form).build();
 
+    clock = ClockPresenter.build();
+
     view = FillComponent.verticalFillBuilder().
         addGivenComponent(form).
+        addGivenComponent(clock.view).
         addCalculatedComponent(entryTable.view).
         build();
 
@@ -97,6 +110,9 @@ public class EmployeeFormPresenter {
 
     entryTable.view.setVisible(true);
 
+    clock.view.setVisible(true);
+    clock.setClockTarget(employee.name);
+
     button.setVisible(false);
   }
 
@@ -117,6 +133,7 @@ public class EmployeeFormPresenter {
 
     button.setVisible(true);
 
+    clock.view.setVisible(false);
     entryTable.view.setVisible(false);
   }
 }

@@ -1,9 +1,7 @@
 package com.timekeep.back;
 
-import org.mapdb.Bind;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-import org.mapdb.Fun;
 
 import java.io.File;
 import java.io.Serializable;
@@ -60,7 +58,7 @@ public class StorageService {
     public StorageObjectList retrieve(String identifier) {
       StorageObject[] storageObjects = map.get(identifier);
       ArrayList<StorageObject> storageObjectsList = new ArrayList<>(storageObjects.length);
-      for(StorageObject storageObject : storageObjects) {
+      for (StorageObject storageObject : storageObjects) {
         storageObjectsList.add(storageObject);
       }
       return new StorageObjectList(storageObjectsList);
@@ -77,13 +75,13 @@ public class StorageService {
 
     try {
       constructor = objectClass.getConstructor();
-    } catch(NoSuchMethodException e) {
+    } catch (NoSuchMethodException e) {
       throw new IllegalArgumentException("No default constructor defined", e);
     }
 
     final Field[] fields = objectClass.getFields();
 
-    for(Field field : fields) {
+    for (Field field : fields) {
       field.setAccessible(true);
     }
 
@@ -150,16 +148,16 @@ public class StorageService {
 
     public StorageObjectList convertToStorageObjectList(Iterable<T> iterable) {
       ArrayList<StorageObject> list = new ArrayList<StorageObject>();
-      for(T t : iterable) {
+      for (T t : iterable) {
         StorageObject storageObject = storageObjectConverter.convertToStorageObject(t);
         list.add(storageObject);
       }
       return new StorageObjectList(list);
     }
 
-    public Iterable<T> convertFromStorageObjectList(StorageObjectList storageObjectList) {
+    public List<T> convertFromStorageObjectList(StorageObjectList storageObjectList) {
       ArrayList<T> list = new ArrayList<T>(storageObjectList.getSize());
-      for(StorageObject storageObject : storageObjectList) {
+      for (StorageObject storageObject : storageObjectList) {
         T t = storageObjectConverter.convertFromStorageObject(storageObject);
         list.add(t);
       }
@@ -170,7 +168,7 @@ public class StorageService {
   /**
    * A StorageObjectConverter is used to convert objects of a given class to StorageObject objects and vice versa
    */
-  public static class StorageObjectConverter <T> {
+  public static class StorageObjectConverter<T> {
     private final Field[] fieldList;
     private final Constructor<T> objectConstructor;
 
@@ -181,11 +179,11 @@ public class StorageService {
 
     public StorageObject convertToStorageObject(T object) {
       ArrayList<Object> listOfValues = new ArrayList(fieldList.length);
-      for(Field field : fieldList) {
+      for (Field field : fieldList) {
         final Object value;
         try {
           value = field.get(object);
-        } catch(IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
           throw new IllegalArgumentException("Unable to create StorageObject from Object", e);
         }
 
@@ -199,16 +197,16 @@ public class StorageService {
     public T convertFromStorageObject(StorageObject storageObject) {
       final T object;
       try {
-         object = objectConstructor.newInstance();
-      } catch (InstantiationException|IllegalAccessException|InvocationTargetException e) {
+        object = objectConstructor.newInstance();
+      } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
         throw new IllegalStateException("Unable to allocate Object for StorageObject", e);
       }
 
       int index = 0;
-      for(Field field : fieldList) {
+      for (Field field : fieldList) {
         try {
-          field.set(object, storageObject.get(index ++));
-        } catch(IllegalAccessException e) {
+          field.set(object, storageObject.get(index++));
+        } catch (IllegalAccessException e) {
           throw new IllegalArgumentException("Unable to populate Object from StorageObject", e);
         }
       }
@@ -219,7 +217,7 @@ public class StorageService {
 
   /**
    * A StorageObject object is used to represent data in an array format in a database
-   *
+   * <p/>
    * POJOs should be broken down into StorageObjects for persistence, and reconstituted for retrieval
    */
   public static class StorageObject implements Serializable {

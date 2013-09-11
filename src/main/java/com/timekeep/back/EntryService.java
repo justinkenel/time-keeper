@@ -2,6 +2,8 @@ package com.timekeep.back;
 
 import com.timekeep.data.Entry;
 
+import java.util.List;
+
 public class EntryService {
   private static final StorageService.MultiStorageAccess multiStorageAccess;
   private static final StorageService.StorageObjectListConverter<Entry> storageObjectListConverter;
@@ -17,7 +19,7 @@ public class EntryService {
     multiStorageAccess.store(name, storageObjectList);
   }
 
-  public static Iterable<Entry> retrieve(String name) {
+  public static List<Entry> retrieve(String name) {
     StorageService.StorageObjectList storageObjectList = multiStorageAccess.retrieve(name);
     return storageObjectListConverter.convertFromStorageObjectList(storageObjectList);
   }

@@ -94,7 +94,7 @@ public class EditableRowTablePresenter<T> {
   }
 
   public void setValues(Iterable<T> values) {
-    final Vector<String[]> rowData = new Vector<String[]>();
+    final Vector<Vector<String>> rowData = new Vector<Vector<String>>();
     for (T value : values) {
       rowData.add(entityToRowConverter.convertToRow(value));
     }
@@ -105,7 +105,7 @@ public class EditableRowTablePresenter<T> {
       public void tableChanged(TableModelEvent event) {
         int index = event.getFirstRow();
         if (index >= 0) {
-          String[] data = rowData.elementAt(index);
+          Vector<String> data = rowData.elementAt(index);
           rowChangeHandler.handleRowChange(data);
         }
       }
@@ -113,16 +113,16 @@ public class EditableRowTablePresenter<T> {
   }
 
   public static interface EntityToRowConverter<K> {
-    String[] convertToRow(K entity);
+    Vector<String> convertToRow(K entity);
   }
 
   public static interface RowChangeHandler<K> {
-    void handleRowChange(String[] row);
+    void handleRowChange(Vector<String> row);
   }
 
   private static class DefaultRowChangeHandler<K> implements RowChangeHandler<K> {
     @Override
-    public void handleRowChange(String[] row) {
+    public void handleRowChange(Vector<String> row) {
     }
   }
 

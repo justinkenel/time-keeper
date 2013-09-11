@@ -4,9 +4,8 @@ import com.timekeep.back.DateService;
 import com.timekeep.back.EmployeeService;
 import com.timekeep.back.EntryService;
 import com.timekeep.back.RateService;
-import com.timekeep.data.Employee;
-import com.timekeep.data.Entry;
-import com.timekeep.data.Rate;
+import com.timekeep.data.*;
+import com.timekeep.front.EmployeeFormPresenter;
 import com.timekeep.front.EmployeeSelectionPresenter;
 
 import java.util.ArrayList;
@@ -50,5 +49,33 @@ public class EmployeeConnector {
     EmployeeSelectionPresenter.addEmployee(employee);
 
     return employee;
+  }
+
+  public Entry addStartEntry() {
+    StrictDate date = DateService.today();
+    StrictTime time = DateService.now();
+
+    List<Entry> entryList = EntryService.retrieve(name);
+    Entry newEntry = new Entry(date, time, DateService.INVALID);
+    entryList.add(0, newEntry);
+    EntryService.store(name, entryList);
+
+    Employee employee = EmployeeService.getEmployee(name);
+    EmployeeFormPresenter.presentEmployee(employee);
+    return newEntry;
+  }
+
+  public Entry endEntry() {
+    StrictTime time = DateService.now();
+
+    List<Entry> entryList = EntryService.retrieve(name);
+    Entry oldEntry = entryList.get(0);
+    Entry newEntry = new Entry(oldEntry.date, oldEntry.start, time);
+    entryList.set(0, newEntry);
+    EntryService.store(name, entryList);
+
+    Employee employee = EmployeeService.getEmployee(name);
+    EmployeeFormPresenter.presentEmployee(employee);
+    return newEntry;
   }
 }
