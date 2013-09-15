@@ -56,6 +56,11 @@ public class FillComponent {
       return this;
     }
 
+    public FillComponentBuilder setJPanelName(String name) {
+      panel.setName(name);
+      return this;
+    }
+
     public JPanel build() {
       panel.setLayout(layoutBuilder.build());
       return panel;

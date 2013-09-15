@@ -166,7 +166,7 @@ public class ComponentFillLayout implements LayoutManager {
 
   @Override
   public Dimension preferredLayoutSize(Container parent) {
-    return null;
+    return parent.getSize();
   }
 
   @Override
