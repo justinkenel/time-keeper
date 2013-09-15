@@ -23,6 +23,25 @@ public class DateService {
 
   public static final StrictTime INVALID = new StrictTime(-1, -1);
 
+  public static StrictDate date(String dateString) {
+    String[] values = dateString.split("/");
+
+    int year = Integer.parseInt(values[0]);
+    int month = Integer.parseInt(values[1]);
+    int day = Integer.parseInt(values[2]);
+
+    return date(year, month, day);
+  }
+
+  public static StrictTime time(String timeString) {
+    String[] values = timeString.split(":");
+
+    int hour = Integer.parseInt(values[0]);
+    int minute = Integer.parseInt(values[1]);
+
+    return time(hour, minute);
+  }
+
   public static String standardString(StrictDate strictDate) {
     return strictDate.year + "/" + strictDate.month + "/" + strictDate.day;
   }

@@ -5,15 +5,13 @@ import com.timekeep.back.EntryService;
 import com.timekeep.back.GroupService;
 import com.timekeep.back.RateService;
 import com.timekeep.connect.EmployeeConnector;
-import com.timekeep.data.Employee;
-import com.timekeep.data.Entry;
-import com.timekeep.data.Group;
-import com.timekeep.data.Rate;
+import com.timekeep.data.*;
 import com.timekeep.front.util.FillComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Vector;
 
 public class EmployeeFormPresenter {
@@ -28,6 +26,8 @@ public class EmployeeFormPresenter {
   private static EditableRowTablePresenter<Entry> entryTable;
 
   private static ClockPresenter clock;
+
+  private static String employeeName;
 
   static {
     button = new JButton("Create");
@@ -74,6 +74,25 @@ public class EmployeeFormPresenter {
             vector.add(DateService.standardString(entity.start));
             vector.add(DateService.standardString(entity.end));
             return vector;
+          }
+        }).
+        setRowChangeHandler(new EditableRowTablePresenter.RowChangeHandler<Entry>() {
+          @Override
+          public void handleRowChange(int index, Vector<String> row) {
+            System.out.println("Save Entry");
+
+            String name = nameField.getText();
+
+            final StrictDate date = DateService.date(row.get(0));
+            final StrictTime start = DateService.time(row.get(1));
+            final StrictTime end = DateService.time(row.get(2));
+
+            final Entry entry = new Entry(date, start, end);
+
+            List<Entry> entries = EntryService.retrieve(name);
+            entries.set(index, entry);
+
+            EntryService.store(name, entries);
           }
         }).build();
 

@@ -106,7 +106,7 @@ public class EditableRowTablePresenter<T> {
         int index = event.getFirstRow();
         if (index >= 0) {
           Vector<String> data = rowData.elementAt(index);
-          rowChangeHandler.handleRowChange(data);
+          rowChangeHandler.handleRowChange(index, data);
         }
       }
     });
@@ -117,12 +117,12 @@ public class EditableRowTablePresenter<T> {
   }
 
   public static interface RowChangeHandler<K> {
-    void handleRowChange(Vector<String> row);
+    void handleRowChange(int index, Vector<String> row);
   }
 
   private static class DefaultRowChangeHandler<K> implements RowChangeHandler<K> {
     @Override
-    public void handleRowChange(Vector<String> row) {
+    public void handleRowChange(int index, Vector<String> row) {
     }
   }
 

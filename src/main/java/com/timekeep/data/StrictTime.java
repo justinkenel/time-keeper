@@ -10,4 +10,10 @@ public class StrictTime implements Serializable {
     this.hour = hour;
     this.minute = minute;
   }
+
+  public boolean equals(Object o) {
+    return (o instanceof StrictTime) &&
+        ((StrictTime) o).hour == hour &&
+        ((StrictTime) o).minute == minute;
+  }
 }
