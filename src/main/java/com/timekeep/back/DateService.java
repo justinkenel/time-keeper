@@ -21,9 +21,14 @@ public class DateService {
     return new StrictTime(hour, minute);
   }
 
+  public static final StrictDate INVALID_DATE = new StrictDate(-1, -1, -1);
   public static final StrictTime INVALID = new StrictTime(-1, -1);
 
   public static StrictDate date(String dateString) {
+    if (dateString.equals("")) {
+      return INVALID_DATE;
+    }
+
     String[] values = dateString.split("/");
 
     int year = Integer.parseInt(values[0]);
@@ -34,6 +39,10 @@ public class DateService {
   }
 
   public static StrictTime time(String timeString) {
+    if (timeString.isEmpty()) {
+      return INVALID;
+    }
+
     String[] values = timeString.split(":");
 
     int hour = Integer.parseInt(values[0]);
@@ -43,6 +52,9 @@ public class DateService {
   }
 
   public static String standardString(StrictDate strictDate) {
+    if (INVALID_DATE.equals(strictDate)) {
+      return "";
+    }
     return strictDate.year + "/" + strictDate.month + "/" + strictDate.day;
   }
 

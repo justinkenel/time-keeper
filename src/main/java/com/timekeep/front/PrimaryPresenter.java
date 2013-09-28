@@ -6,7 +6,7 @@ import com.timekeep.front.util.ComponentFillLayout;
 import javax.swing.*;
 
 public class PrimaryPresenter {
-  private static JFrame primaryView;
+  public static JFrame primaryView;
 
   static {
     primaryView = new JFrame("Time Management");

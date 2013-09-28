@@ -2,6 +2,8 @@ package com.timekeep.front.menu;
 
 import com.timekeep.back.JobsiteService;
 import com.timekeep.data.Jobsite;
+import com.timekeep.front.JobsiteModalPresenter;
+import com.timekeep.front.PrimaryPresenter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -38,7 +40,17 @@ public class MenuBarPresenter {
       }
     });
 
-    editMenu.add(jobsiteItem);
+    final JMenuItem jobsiteListItem = new JMenuItem("Jobsites");
+    jobsiteListItem.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        JobsiteModalPresenter presenter = JobsiteModalPresenter.build(PrimaryPresenter.primaryView);
+        presenter.view.setVisible(true);
+      }
+    });
+
+    editMenu.add(jobsiteListItem);
+
 
     view.add(editMenu);
   }

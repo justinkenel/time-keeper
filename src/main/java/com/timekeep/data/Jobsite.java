@@ -2,12 +2,11 @@ package com.timekeep.data;
 
 import java.io.Serializable;
 
-public class Jobsite implements Serializable {
-  public final String name;
+public class Jobsite extends NamedItem implements Serializable {
   public final String state;
 
   public Jobsite(String name, String state) {
-    this.name = name;
+    super(name);
     this.state = state;
   }
 
