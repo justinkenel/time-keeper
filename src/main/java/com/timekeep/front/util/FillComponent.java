@@ -35,6 +35,11 @@ public class FillComponent {
     return new FormComponentBuilder(FormFillLayout.builder(button), panel);
   }
 
+  public static FormComponentBuilder displayFormBuilder() {
+    JPanel panel = new JPanel();
+    return new FormComponentBuilder(FormFillLayout.builder(), panel);
+  }
+
   public static class FillComponentBuilder {
     private ComponentFillLayout.ComponentFillLayoutBuilder layoutBuilder;
     private JPanel panel;

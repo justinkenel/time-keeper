@@ -1,7 +1,6 @@
 package com.timekeep.back;
 
 import com.timekeep.data.Entry;
-import com.timekeep.data.Rate;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -22,8 +21,8 @@ public class EntryServiceTest {
 
   @Test
   public void testRoundTrip() throws Exception {
-    Entry entry1 = new Entry(DateService.date(1, 2, 3), DateService.time(10, 11), DateService.time(20,21));
-    Entry entry2 = new Entry(DateService.date(4, 5, 6), DateService.time(30, 31), DateService.time(40,41));
+    Entry entry1 = new Entry(DateService.date(1, 2, 3), DateService.time(10, 11), DateService.time(20, 21), "site1");
+    Entry entry2 = new Entry(DateService.date(4, 5, 6), DateService.time(30, 31), DateService.time(40, 41), "site2");
 
     ArrayList<Entry> list = new ArrayList<Entry>();
     list.add(entry1);

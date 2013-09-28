@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -33,15 +34,18 @@ public class EditableRowTablePresenter<T> {
     private EntityToRowConverter<K> entityToRowConverter;
     private RowChangeHandler<K> rowChangeHandler;
     private RowCellEditorCreator<K> rowCellEditorCreator;
+    private List<K> values;
     private List<String> headers;
 
     private Builder(EntityToRowConverter<K> entityToRowConverter,
                     RowChangeHandler<K> rowChangeHandler,
                     RowCellEditorCreator<K> rowCellEditorCreator,
+                    List<K> values,
                     List<String> headers) {
       this.entityToRowConverter = entityToRowConverter;
       this.rowChangeHandler = rowChangeHandler;
       this.rowCellEditorCreator = rowCellEditorCreator;
+      this.values = values;
       this.headers = headers;
     }
 
@@ -65,6 +69,11 @@ public class EditableRowTablePresenter<T> {
       return this;
     }
 
+    public Builder<K> setValues(List<K> values) {
+      this.values = values;
+      return this;
+    }
+
     public EditableRowTablePresenter<K> build() {
       DefaultTableModel model = new DefaultTableModel();
       JTable jtable = new JTable(model);
@@ -74,12 +83,42 @@ public class EditableRowTablePresenter<T> {
         headerVector.add(header);
       }
 
+      model.setDataVector(new Vector(0), headerVector);
+
+      //
+      final Vector<Vector<String>> rowData = new Vector<Vector<String>>();
+      for (K value : values) {
+        rowData.add(entityToRowConverter.convertToRow(value));
+      }
+      model.setDataVector(rowData, headerVector);
+
+      model.addTableModelListener(new TableModelListener() {
+        @Override
+        public void tableChanged(TableModelEvent event) {
+          int index = event.getFirstRow();
+          if (index >= 0) {
+            Vector<String> data = rowData.elementAt(index);
+            rowChangeHandler.handleRowChange(index, data);
+          }
+        }
+      });
+
+
+      //
+
       JScrollPane scrollPane = new JScrollPane(jtable);
       scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
       JPanel view = FillComponent.verticalFillBuilder().
           addCalculatedComponent(scrollPane).
           build();
+
+      TableCellEditor[] editors = rowCellEditorCreator.getRowCellEditors();
+      for (int i = 0; i < editors.length; ++i) {
+        if (editors[i] != null) {
+          jtable.getColumnModel().getColumn(i).setCellEditor(editors[i]);
+        }
+      }
 
       return new EditableRowTablePresenter<K>(view, model, entityToRowConverter,
           rowChangeHandler, rowCellEditorCreator, headerVector);
@@ -90,6 +129,7 @@ public class EditableRowTablePresenter<T> {
     return new Builder<T>(null,
         new DefaultRowChangeHandler<T>(),
         new DefaultRowCellEditorCreator<T>(),
+        new LinkedList<T>(),
         new LinkedList<String>());
   }
 
@@ -127,13 +167,13 @@ public class EditableRowTablePresenter<T> {
   }
 
   public static interface RowCellEditorCreator<K> {
-    CellEditor[] getRowCellEditors(String[] row);
+    TableCellEditor[] getRowCellEditors();
   }
 
   private static class DefaultRowCellEditorCreator<K> implements RowCellEditorCreator<K> {
     @Override
-    public CellEditor[] getRowCellEditors(String[] row) {
-      return new CellEditor[row.length];
+    public TableCellEditor[] getRowCellEditors() {
+      return new TableCellEditor[0];
     }
   }
 }

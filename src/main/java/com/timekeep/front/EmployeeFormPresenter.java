@@ -1,36 +1,52 @@
 package com.timekeep.front;
 
-import com.timekeep.back.DateService;
-import com.timekeep.back.EntryService;
-import com.timekeep.back.GroupService;
-import com.timekeep.back.RateService;
+import com.timekeep.back.*;
 import com.timekeep.connect.EmployeeConnector;
 import com.timekeep.data.*;
 import com.timekeep.front.util.FillComponent;
 
 import javax.swing.*;
+import javax.swing.table.TableCellEditor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Vector;
 
 public class EmployeeFormPresenter {
-  public static JPanel view;
+  public final JPanel view;
+  private final JTextField nameField;
+  private final JTextField rateField;
+  private final JComboBox groupField;
+  private final JButton button;
+  private final EditableRowTablePresenter entryTable;
+  private final ClockPresenter clockPresenter;
+  private final String employeeName;
 
-  private static JTextField nameField;
-  private static JTextField rateField;
-  private static JComboBox groupField;
+  private EmployeeFormPresenter(JPanel view, JTextField nameField, JTextField rateField, JComboBox groupField,
+                                JButton button, EditableRowTablePresenter entryTable, ClockPresenter clockPresenter,
+                                String employeeName) {
+    this.view = view;
+    this.rateField = rateField;
+    this.nameField = nameField;
+    this.groupField = groupField;
+    this.button = button;
+    this.entryTable = entryTable;
+    this.clockPresenter = clockPresenter;
+    this.employeeName = employeeName;
+  }
 
-  private static JButton button;
+  public static EmployeeFormPresenter buildEmployeeCreateFormPresenter() {
+    JButton button = new JButton("Create");
 
-  private static EditableRowTablePresenter<Entry> entryTable;
+    final JTextField nameField = new JTextField();
+    final JTextField rateField = new JTextField();
+    final JComboBox groupField = new JComboBox();
 
-  private static ClockPresenter clock;
-
-  private static String employeeName;
-
-  static {
-    button = new JButton("Create");
+    DefaultComboBoxModel model = new DefaultComboBoxModel();
+    for (Group group : GroupService.getGroups()) {
+      model.addElement(group.name);
+    }
+    groupField.setModel(model);
 
     button.addActionListener(new ActionListener() {
       @Override
@@ -49,67 +65,20 @@ public class EmployeeFormPresenter {
       }
     });
 
-    nameField = new JTextField();
-    rateField = new JTextField();
-    groupField = new JComboBox();
-
-    JPanel form = FillComponent.formBuilder(button).
+    JPanel view = FillComponent.formBuilder(button).
         addInput("Name", nameField).
         addInput("Rate", rateField).
         addInput("Group", groupField).
         build();
 
-    view = form;
-
-    entryTable = EditableRowTablePresenter.<Entry>builder().
-        addHeader("Date").
-        addHeader("Start").
-        addHeader("End").
-        setEntityToRowConverter(new EditableRowTablePresenter.EntityToRowConverter<Entry>() {
-          @Override
-          public Vector<String> convertToRow(Entry entity) {
-            //return new String[]{DateService.standardString(entity.date)};
-            Vector<String> vector = new Vector<>();
-            vector.add(DateService.standardString(entity.date));
-            vector.add(DateService.standardString(entity.start));
-            vector.add(DateService.standardString(entity.end));
-            return vector;
-          }
-        }).
-        setRowChangeHandler(new EditableRowTablePresenter.RowChangeHandler<Entry>() {
-          @Override
-          public void handleRowChange(int index, Vector<String> row) {
-            System.out.println("Save Entry");
-
-            String name = nameField.getText();
-
-            final StrictDate date = DateService.date(row.get(0));
-            final StrictTime start = DateService.time(row.get(1));
-            final StrictTime end = DateService.time(row.get(2));
-
-            final Entry entry = new Entry(date, start, end);
-
-            List<Entry> entries = EntryService.retrieve(name);
-            entries.set(index, entry);
-
-            EntryService.store(name, entries);
-          }
-        }).build();
-
-    //view = FillComponent.horizontalFillBuilder().addCalculatedComponent(form).build();
-
-    clock = ClockPresenter.build();
-
-    view = FillComponent.verticalFillBuilder().
-        addGivenComponent(form).
-        addGivenComponent(clock.view).
-        addCalculatedComponent(entryTable.view).
-        build();
-
-    //view = entryTable.view;
+    return new EmployeeFormPresenter(view, nameField, rateField, groupField, button, null, null, null);
   }
 
-  public static void presentEmployee(Employee employee) {
+  public static EmployeeFormPresenter buildEmployeeDisplayFormPresenter(Employee employee) {
+    final JTextField nameField = new JTextField();
+    final JTextField rateField = new JTextField();
+    final JComboBox groupField = new JComboBox();
+
     nameField.setText(employee.name);
 
     Iterable<Rate> rateList = RateService.retrieve(employee.name);
@@ -124,35 +93,72 @@ public class EmployeeFormPresenter {
     rateField.setEnabled(false);
     groupField.setEnabled(false);
 
-    Iterable<Entry> entryList = EntryService.retrieve(employee.name);
-    entryTable.setValues(entryList);
+    EditableRowTablePresenter entryTable = EditableRowTablePresenter.<Entry>builder().
+        addHeader("Date").
+        addHeader("Start").
+        addHeader("End").
+        addHeader("Jobsite").
+        setEntityToRowConverter(new EditableRowTablePresenter.EntityToRowConverter<Entry>() {
+          @Override
+          public Vector<String> convertToRow(Entry entity) {
+            Vector<String> vector = new Vector<>();
+            vector.add(DateService.standardString(entity.date));
+            vector.add(DateService.standardString(entity.start));
+            vector.add(DateService.standardString(entity.end));
+            vector.add(entity.jobsite);
+            return vector;
+          }
+        }).
+        setRowCellEditorCreator(new EditableRowTablePresenter.RowCellEditorCreator<Entry>() {
+          @Override
+          public TableCellEditor[] getRowCellEditors() {
+            TableCellEditor[] editors = new TableCellEditor[4];
 
-    entryTable.view.setVisible(true);
+            JComboBox<String> jobsiteSelect = new JComboBox<String>();
+            for (Jobsite jobsite : JobsiteService.getJobsites()) {
+              jobsiteSelect.addItem(jobsite.name);
+            }
+            editors[3] = new DefaultCellEditor(jobsiteSelect);
 
-    clock.view.setVisible(true);
+            return editors;
+          }
+        }).
+        setRowChangeHandler(new EditableRowTablePresenter.RowChangeHandler<Entry>() {
+          @Override
+          public void handleRowChange(int index, Vector<String> row) {
+            System.out.println("Save Entry");
+
+            String name = nameField.getText();
+
+            final StrictDate date = DateService.date(row.get(0));
+            final StrictTime start = DateService.time(row.get(1));
+            final StrictTime end = DateService.time(row.get(2));
+            final String jobsite = row.get(3);
+
+            final Entry entry = new Entry(date, start, end, jobsite);
+
+            List<Entry> entries = EntryService.retrieve(name);
+            entries.set(index, entry);
+
+            EntryService.store(name, entries);
+          }
+        }).setValues(EntryService.retrieve(employee.name)).build();
+
+    ClockPresenter clock = ClockPresenter.build();
     clock.setClockTarget(employee.name);
 
-    button.setVisible(false);
-  }
+    JPanel form = FillComponent.displayFormBuilder().
+        addInput("Name", nameField).
+        addInput("Rate", rateField).
+        addInput("Group", groupField).
+        build();
 
-  public static void presentForm() {
-    nameField.setText("");
-    rateField.setText("");
+    JPanel view = FillComponent.verticalFillBuilder().
+        addGivenComponent(form).
+        addGivenComponent(clock.view).
+        addCalculatedComponent(entryTable.view).
+        build();
 
-    DefaultComboBoxModel model = new DefaultComboBoxModel();
-    for (Group group : GroupService.getGroups()) {
-      model.addElement(group.name);
-    }
-
-    groupField.setModel(model);
-
-    nameField.setEnabled(true);
-    rateField.setEnabled(true);
-    groupField.setEnabled(true);
-
-    button.setVisible(true);
-
-    clock.view.setVisible(false);
-    entryTable.view.setVisible(false);
+    return new EmployeeFormPresenter(view, nameField, rateField, groupField, null, entryTable, clock, employee.name);
   }
 }

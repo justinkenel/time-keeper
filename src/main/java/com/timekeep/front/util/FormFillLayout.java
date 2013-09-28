@@ -40,13 +40,19 @@ public class FormFillLayout implements LayoutManager {
       yPosition += Math.max(labelSize.height, inputSize.height) + 5;
     }
 
-    Dimension buttonSize = button.getPreferredSize();
-    button.setSize(buttonSize);
-    button.setLocation(halfWidth - buttonSize.width / 2, yPosition);
+    if (button != null) {
+      Dimension buttonSize = button.getPreferredSize();
+      button.setSize(buttonSize);
+      button.setLocation(halfWidth - buttonSize.width / 2, yPosition);
+    }
   }
 
   public static FormFillBuilder builder(Component button) {
     return new FormFillBuilder(new LinkedList<Component>(), new LinkedList<Component>(), button);
+  }
+
+  public static FormFillBuilder builder() {
+    return builder(null);
   }
 
   public static class FormFillBuilder {
@@ -83,7 +89,7 @@ public class FormFillLayout implements LayoutManager {
   @Override
   public Dimension preferredLayoutSize(Container parent) {
     int width = parent.getWidth();
-    int height = button.isVisible() ? button.getPreferredSize().height + 10 : 5;
+    int height = (button != null && button.isVisible()) ? button.getPreferredSize().height + 10 : 5;
 
     for (int i = 0; i < inputs.length; ++i) {
       Component input = inputs[i];

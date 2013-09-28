@@ -25,13 +25,13 @@ public class SelectedItemPresenter {
   }
 
   public static void presentNewEmployee() {
-    EmployeeFormPresenter.presentForm();
-    showView(EmployeeFormPresenter.view);
+    EmployeeFormPresenter presenter = EmployeeFormPresenter.buildEmployeeCreateFormPresenter();
+    showView(presenter.view);
   }
 
   public static void presentEmployee(Employee employee) {
-    EmployeeFormPresenter.presentEmployee(employee);
-    showView(EmployeeFormPresenter.view);
+    EmployeeFormPresenter presenter = EmployeeFormPresenter.buildEmployeeDisplayFormPresenter(employee);
+    showView(presenter.view);
   }
 
   private static void showView(Component component) {

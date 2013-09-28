@@ -2,7 +2,6 @@ package com.timekeep.back;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -15,15 +14,15 @@ public class PropertiesService {
   static {
     propertiesFile = new File(PROPERTIES_FILE_PATH);
 
-    if(!propertiesFile.exists()) {
+    if (!propertiesFile.exists()) {
       createSettingsFile(propertiesFile);
     }
 
     properties = new Properties();
 
-    try(FileInputStream inputStream = new FileInputStream(propertiesFile)) {
+    try (FileInputStream inputStream = new FileInputStream(propertiesFile)) {
       properties.load(inputStream);
-    } catch(IOException e) {
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to load properties file", e);
     }
   }
@@ -42,6 +41,10 @@ public class PropertiesService {
 
   public static String getEmployeeDatabaseName() {
     return get("employee.database.name", "employee");
+  }
+
+  public static String getJobsiteDatabaseName() {
+    return get("employee.jobsite.database.name", "jobsite");
   }
 
   public static String getRateDataName() {

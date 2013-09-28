@@ -1,5 +1,6 @@
 package com.timekeep.front;
 
+import com.timekeep.front.menu.MenuBarPresenter;
 import com.timekeep.front.util.ComponentFillLayout;
 
 import javax.swing.*;
@@ -20,6 +21,8 @@ public class PrimaryPresenter {
 
     primaryView.add(SelectionPresenter.view);
     primaryView.add(SelectedItemPresenter.view);
+
+    primaryView.setJMenuBar(MenuBarPresenter.view);
   }
 
   public static void show() {
@@ -30,7 +33,7 @@ public class PrimaryPresenter {
     primaryView.setContentPane(primaryView.getContentPane());
   }
 
-  public static void main(String[]args) {
+  public static void main(String[] args) {
     show();
   }
 }
