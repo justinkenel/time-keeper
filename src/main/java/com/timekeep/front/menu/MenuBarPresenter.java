@@ -2,8 +2,9 @@ package com.timekeep.front.menu;
 
 import com.timekeep.back.JobsiteService;
 import com.timekeep.data.Jobsite;
-import com.timekeep.front.JobsiteModalPresenter;
 import com.timekeep.front.PrimaryPresenter;
+import com.timekeep.front.dialog.EmployeeTypeModalPresenter;
+import com.timekeep.front.dialog.JobsiteModalPresenter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -49,8 +50,17 @@ public class MenuBarPresenter {
       }
     });
 
-    editMenu.add(jobsiteListItem);
+    final JMenuItem employeeTypeListItem = new JMenuItem("Types");
+    employeeTypeListItem.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        EmployeeTypeModalPresenter presenter = EmployeeTypeModalPresenter.build(PrimaryPresenter.primaryView);
+        presenter.view.setVisible(true);
+      }
+    });
 
+    editMenu.add(jobsiteListItem);
+    editMenu.add(employeeTypeListItem);
 
     view.add(editMenu);
   }

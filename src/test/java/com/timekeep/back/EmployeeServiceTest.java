@@ -1,11 +1,8 @@
 package com.timekeep.back;
 
 import com.timekeep.data.Employee;
-import com.timekeep.data.Entry;
-import com.timekeep.data.Rate;
 import junit.framework.Assert;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -24,7 +21,7 @@ public class EmployeeServiceTest {
 
   @Test
   public void testRoundTrip() {
-    Employee employee = new Employee("name", "group");
+    Employee employee = new Employee("name", "group", "type");
     EmployeeService.storeEmployee(employee);
 
     Employee retrievedEmployee = EmployeeService.getEmployee("name");
@@ -35,9 +32,9 @@ public class EmployeeServiceTest {
 
   @Test
   public void testGetEmployees() {
-    Employee employee1 = new Employee("name1", "group1");
-    Employee employee2 = new Employee("name2", "group2");
-    Employee employee3 = new Employee("name3", "group3");
+    Employee employee1 = new Employee("name1", "group1", "type1");
+    Employee employee2 = new Employee("name2", "group2", "type2");
+    Employee employee3 = new Employee("name3", "group3", "type3");
 
     EmployeeService.storeEmployee(employee1);
     EmployeeService.storeEmployee(employee2);

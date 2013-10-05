@@ -13,17 +13,19 @@ import java.util.List;
 
 public class EmployeeConnector {
   private String name;
+  private String type;
   private int rate;
   private String group;
 
-  private EmployeeConnector(String name, int rate, String group) {
+  private EmployeeConnector(String name, int rate, String group, String type) {
     this.name = name;
     this.rate = rate;
     this.group = group;
+    this.type = type;
   }
 
   public static EmployeeConnector connector(String name) {
-    return new EmployeeConnector(name, 0, "");
+    return new EmployeeConnector(name, 0, "", "");
   }
 
   public EmployeeConnector setRate(int rate) {
@@ -36,11 +38,16 @@ public class EmployeeConnector {
     return this;
   }
 
+  public EmployeeConnector setType(String type) {
+    this.type = type;
+    return this;
+  }
+
   public Employee createAndStore() {
     Rate firstRate = new Rate(DateService.today(), rate);
     List<Rate> rateList = new ArrayList(1);
     rateList.add(firstRate);
-    Employee employee = new Employee(name, group);
+    Employee employee = new Employee(name, group, type);
 
     EmployeeService.storeEmployee(employee);
     RateService.store(name, rateList);

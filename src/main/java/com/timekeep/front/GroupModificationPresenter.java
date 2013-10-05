@@ -56,7 +56,9 @@ public class GroupModificationPresenter {
 
         System.out.println("importData");
 
-        Employee newEmployee = new Employee(employeeName, groupName);
+        Employee oldEmployee = EmployeeService.getEmployee(employeeName);
+
+        Employee newEmployee = new Employee(employeeName, groupName, oldEmployee.type);
         EmployeeService.storeEmployee(newEmployee);
 
         refresh(employeeName, groupEmployeeModel, nonGroupEmployeeModel);

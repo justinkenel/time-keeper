@@ -55,6 +55,10 @@ public class PropertiesService {
     return get("employee.entry.database.name", "entry");
   }
 
+  public static String getEmployeeTypeDataName() {
+    return get("employee.type.database.name", "type");
+  }
+
   public static String getGroupDatabaseName() {
     return get("group.database.name", "group");
   }

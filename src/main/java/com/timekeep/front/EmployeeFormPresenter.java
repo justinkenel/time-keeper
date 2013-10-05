@@ -17,18 +17,21 @@ public class EmployeeFormPresenter {
   private final JTextField nameField;
   private final JTextField rateField;
   private final JComboBox groupField;
+  private final JComboBox typeField;
   private final JButton button;
   private final EditableRowTablePresenter entryTable;
   private final ClockPresenter clockPresenter;
   private final String employeeName;
 
   private EmployeeFormPresenter(JPanel view, JTextField nameField, JTextField rateField, JComboBox groupField,
+                                JComboBox typeField,
                                 JButton button, EditableRowTablePresenter entryTable, ClockPresenter clockPresenter,
                                 String employeeName) {
     this.view = view;
     this.rateField = rateField;
     this.nameField = nameField;
     this.groupField = groupField;
+    this.typeField = typeField;
     this.button = button;
     this.entryTable = entryTable;
     this.clockPresenter = clockPresenter;
@@ -41,6 +44,7 @@ public class EmployeeFormPresenter {
     final JTextField nameField = new JTextField();
     final JTextField rateField = new JTextField();
     final JComboBox groupField = new JComboBox();
+    final JComboBox typeField = new JComboBox();
 
     DefaultComboBoxModel model = new DefaultComboBoxModel();
     for (Group group : GroupService.getGroups()) {
@@ -48,19 +52,29 @@ public class EmployeeFormPresenter {
     }
     groupField.setModel(model);
 
+    DefaultComboBoxModel typeModel = new DefaultComboBoxModel();
+    for (EmployeeType employeeType : PersistentServices.employeeTypeService.getAll()) {
+      typeModel.addElement(employeeType.name);
+    }
+    typeField.setModel(typeModel);
+
+
     button.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         String rateString = rateField.getText();
-        String[] parts = rateString.split("\\.");
+        /*String[] parts = rateString.split("\\.");
         int rateValue = Integer.parseInt(parts[0]) * 100;
         if (parts.length == 2) {
           rateValue += Integer.parseInt(parts[1]) % 100;
-        }
+        } */
+
+        int rateValue = RateService.stringToRate(rateString);
 
         EmployeeConnector.connector(nameField.getText()).
             setGroup((String) groupField.getSelectedItem()).
             setRate(rateValue).
+            setType((String) typeField.getSelectedItem()).
             createAndStore();
       }
     });
@@ -69,29 +83,36 @@ public class EmployeeFormPresenter {
         addInput("Name", nameField).
         addInput("Rate", rateField).
         addInput("Group", groupField).
+        addInput("Type", typeField).
         build();
 
-    return new EmployeeFormPresenter(view, nameField, rateField, groupField, button, null, null, null);
+    return new EmployeeFormPresenter(view, nameField, rateField, groupField, typeField, button, null, null, null);
   }
 
   public static EmployeeFormPresenter buildEmployeeDisplayFormPresenter(Employee employee) {
     final JTextField nameField = new JTextField();
     final JTextField rateField = new JTextField();
     final JComboBox groupField = new JComboBox();
+    final JComboBox typeField = new JComboBox();
 
     nameField.setText(employee.name);
 
     Iterable<Rate> rateList = RateService.retrieve(employee.name);
     Rate rate = rateList.iterator().next();
-    rateField.setText(String.valueOf(rate.rate));
+    rateField.setText(RateService.rateToString(rate.rate));
 
     DefaultComboBoxModel model = new DefaultComboBoxModel();
     model.addElement(employee.group);
     groupField.setModel(model);
 
+    DefaultComboBoxModel typeModel = new DefaultComboBoxModel();
+    typeModel.addElement(employee.type);
+    typeField.setModel(typeModel);
+
     nameField.setEnabled(false);
     rateField.setEnabled(false);
     groupField.setEnabled(false);
+    typeField.setEnabled(false);
 
     EditableRowTablePresenter entryTable = EditableRowTablePresenter.<Entry>builder().
         addHeader("Date").
@@ -151,6 +172,7 @@ public class EmployeeFormPresenter {
         addInput("Name", nameField).
         addInput("Rate", rateField).
         addInput("Group", groupField).
+        addInput("Type", typeField).
         build();
 
     JPanel view = FillComponent.verticalFillBuilder().
@@ -159,6 +181,6 @@ public class EmployeeFormPresenter {
         addCalculatedComponent(entryTable.view).
         build();
 
-    return new EmployeeFormPresenter(view, nameField, rateField, groupField, null, entryTable, clock, employee.name);
+    return new EmployeeFormPresenter(view, nameField, rateField, groupField, typeField, null, entryTable, clock, employee.name);
   }
 }

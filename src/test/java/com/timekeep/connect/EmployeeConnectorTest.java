@@ -29,7 +29,7 @@ public class EmployeeConnectorTest {
         setRate(100).
         createAndStore();
 
-    Employee expected = new Employee("employee-name", "group-name");
+    Employee expected = new Employee("employee-name", "group-name", "type-name");
 
     Assert.assertEquals(expected, employee);
 

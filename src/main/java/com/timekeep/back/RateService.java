@@ -25,4 +25,16 @@ public class RateService {
   public static void clear() {
     multiStorageAccess.clear();
   }
+
+  public static String rateToString(int rate) {
+    int cents = rate % 100;
+    int dollars = rate / 100;
+
+    return dollars + "." + (cents < 10 ? "0" + cents : cents);
+  }
+
+  public static int stringToRate(String rate) {
+    String[] split = rate.split("\\.");
+    return Integer.parseInt(split[0]) * 100 + Integer.parseInt(split[1]);
+  }
 }
