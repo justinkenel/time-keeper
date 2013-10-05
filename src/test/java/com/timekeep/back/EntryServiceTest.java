@@ -21,8 +21,10 @@ public class EntryServiceTest {
 
   @Test
   public void testRoundTrip() throws Exception {
-    Entry entry1 = new Entry(DateService.date(1, 2, 3), DateService.time(10, 11), DateService.time(20, 21), "site1");
-    Entry entry2 = new Entry(DateService.date(4, 5, 6), DateService.time(30, 31), DateService.time(40, 41), "site2");
+    Entry entry1 = new Entry(DateService.date(1, 2, 3), DateService.time(10, 11), DateService.time(20, 21), "site1",
+        DateService.time(1, 0));
+    Entry entry2 = new Entry(DateService.date(4, 5, 6), DateService.time(30, 31), DateService.time(40, 41), "site2",
+        DateService.time(2, 1));
 
     ArrayList<Entry> list = new ArrayList<Entry>();
     list.add(entry1);

@@ -9,15 +9,18 @@ public class Entry implements Serializable {
 
   public final String jobsite;
 
-  public Entry(StrictDate date, StrictTime start, StrictTime end, String jobsite) {
+  public final StrictTime drive;
+
+  public Entry(StrictDate date, StrictTime start, StrictTime end, String jobsite, StrictTime drive) {
     this.date = date;
     this.start = start;
     this.end = end;
     this.jobsite = jobsite;
+    this.drive = drive;
   }
 
   public Entry() {
-    this(null, null, null, null);
+    this(null, null, null, null, null);
   }
 
   public boolean equals(Object o) {
@@ -25,6 +28,7 @@ public class Entry implements Serializable {
         date.equals(((Entry) o).date) &&
         start.equals(((Entry) o).start) &&
         end.equals(((Entry) o).end) &&
-        jobsite.equals(((Entry) o).jobsite);
+        jobsite.equals(((Entry) o).jobsite) &&
+        drive.equals(((Entry) o).drive);
   }
 }

@@ -119,6 +119,7 @@ public class EmployeeFormPresenter {
         addHeader("Start").
         addHeader("End").
         addHeader("Jobsite").
+        addHeader("Drive").
         setEntityToRowConverter(new EditableRowTablePresenter.EntityToRowConverter<Entry>() {
           @Override
           public Vector<String> convertToRow(Entry entity) {
@@ -127,13 +128,14 @@ public class EmployeeFormPresenter {
             vector.add(DateService.standardString(entity.start));
             vector.add(DateService.standardString(entity.end));
             vector.add(entity.jobsite);
+            vector.add(DateService.standardString(entity.drive));
             return vector;
           }
         }).
         setRowCellEditorCreator(new EditableRowTablePresenter.RowCellEditorCreator<Entry>() {
           @Override
           public TableCellEditor[] getRowCellEditors() {
-            TableCellEditor[] editors = new TableCellEditor[4];
+            TableCellEditor[] editors = new TableCellEditor[5];
 
             JComboBox<String> jobsiteSelect = new JComboBox<String>();
             for (Jobsite jobsite : JobsiteService.getJobsites()) {
@@ -155,8 +157,9 @@ public class EmployeeFormPresenter {
             final StrictTime start = DateService.time(row.get(1));
             final StrictTime end = DateService.time(row.get(2));
             final String jobsite = row.get(3);
+            final StrictTime drive = DateService.time(row.get(4));
 
-            final Entry entry = new Entry(date, start, end, jobsite);
+            final Entry entry = new Entry(date, start, end, jobsite, drive);
 
             List<Entry> entries = EntryService.retrieve(name);
             entries.set(index, entry);
