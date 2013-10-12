@@ -18,6 +18,7 @@ public class GroupFormPresenter {
   private final static JButton submitButton;
 
   private final static JPanel modificationContainer;
+  private final static ClockPresenter groupClockPresenter;
 
   static {
 
@@ -35,9 +36,12 @@ public class GroupFormPresenter {
 
     modificationContainer = SingleFillLayout.componentFillPanel();
 
+    groupClockPresenter = ClockPresenter.buildGroupClock();
+
     view = FillComponent.verticalFillBuilder().
         addGivenComponent(form).
         addCalculatedComponent(modificationContainer).
+        addGivenComponent(groupClockPresenter.view).
         build();
 
     view.setName("GroupFormPresenter");
@@ -50,6 +54,7 @@ public class GroupFormPresenter {
 
     modificationContainer.removeAll();
     modificationContainer.add(GroupModificationPresenter.build(group.name).view);
+    groupClockPresenter.setClockTarget(group.name);
   }
 
   public static void presentForm() {

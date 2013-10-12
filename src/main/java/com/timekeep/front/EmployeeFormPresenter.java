@@ -168,7 +168,7 @@ public class EmployeeFormPresenter {
           }
         }).setValues(EntryService.retrieve(employee.name)).build();
 
-    ClockPresenter clock = ClockPresenter.build();
+    ClockPresenter clock = ClockPresenter.buildEmployeeClock();
     clock.setClockTarget(employee.name);
 
     JPanel form = FillComponent.displayFormBuilder().

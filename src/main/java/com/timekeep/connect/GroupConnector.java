@@ -6,6 +6,7 @@ import com.timekeep.data.Entry;
 import com.timekeep.data.Group;
 import com.timekeep.data.StrictDate;
 import com.timekeep.data.StrictTime;
+import com.timekeep.facade.GroupFacade;
 import com.timekeep.front.GroupSelectionPresenter;
 
 public class GroupConnector {
@@ -40,6 +41,13 @@ public class GroupConnector {
     StrictTime time = DateService.now();
     Entry newEntry = new Entry(date, time, DateService.INVALID_TIME, "", DateService.INVALID_TIME);
 
+    GroupFacade.facade(name).addEntry(newEntry);
+
     return newEntry;
+  }
+
+  public void endEntry() {
+    StrictTime endTime = DateService.now();
+    GroupFacade.facade(name).endEntry(endTime);
   }
 }

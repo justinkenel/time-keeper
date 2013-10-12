@@ -3,6 +3,7 @@ package com.timekeep.facade;
 import com.timekeep.back.EmployeeService;
 import com.timekeep.data.Employee;
 import com.timekeep.data.Entry;
+import com.timekeep.data.StrictTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,14 @@ public class GroupFacade {
     }
 
     return entry;
+  }
+
+  public void endEntry(StrictTime endTime) {
+    Iterable<EmployeeFacade> employeeList = getEmployees();
+
+    for (EmployeeFacade facade : employeeList) {
+      facade.endEntry(endTime);
+    }
   }
 
   public static GroupFacade facade(String name) {
