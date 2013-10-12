@@ -63,7 +63,7 @@ public class EmployeeConnector {
     StrictTime time = DateService.now();
 
     List<Entry> entryList = EntryService.retrieve(name);
-    Entry newEntry = new Entry(date, time, DateService.INVALID, "", DateService.INVALID);
+    Entry newEntry = new Entry(date, time, DateService.INVALID_TIME, "", DateService.INVALID_TIME);
     entryList.add(0, newEntry);
     EntryService.store(name, entryList);
 

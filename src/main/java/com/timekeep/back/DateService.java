@@ -22,7 +22,7 @@ public class DateService {
   }
 
   public static final StrictDate INVALID_DATE = new StrictDate(-1, -1, -1);
-  public static final StrictTime INVALID = new StrictTime(-1, -1);
+  public static final StrictTime INVALID_TIME = new StrictTime(-1, -1);
 
   public static StrictDate date(String dateString) {
     if (dateString.equals("")) {
@@ -40,7 +40,7 @@ public class DateService {
 
   public static StrictTime time(String timeString) {
     if (timeString.isEmpty()) {
-      return INVALID;
+      return INVALID_TIME;
     }
 
     String[] values = timeString.split(":");
@@ -59,7 +59,7 @@ public class DateService {
   }
 
   public static String standardString(StrictTime strictTime) {
-    boolean invalid = INVALID.equals(strictTime);
+    boolean invalid = INVALID_TIME.equals(strictTime);
     return invalid ? "" : strictTime.hour + ":" + strictTime.minute;
   }
 

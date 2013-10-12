@@ -56,7 +56,13 @@ public class StorageService {
     }
 
     public StorageObjectList retrieve(String identifier) {
-      StorageObject[] storageObjects = map.get(identifier);
+      final StorageObject[] storageObjects;
+      if (map.containsKey(identifier)) {
+        storageObjects = map.get(identifier);
+      } else {
+        storageObjects = new StorageObject[0];
+      }
+
       ArrayList<StorageObject> storageObjectsList = new ArrayList<>(storageObjects.length);
       for (StorageObject storageObject : storageObjects) {
         storageObjectsList.add(storageObject);

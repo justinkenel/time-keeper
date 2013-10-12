@@ -1,9 +1,12 @@
 package com.timekeep.connect;
 
+import com.timekeep.back.DateService;
 import com.timekeep.back.GroupService;
+import com.timekeep.data.Entry;
 import com.timekeep.data.Group;
+import com.timekeep.data.StrictDate;
+import com.timekeep.data.StrictTime;
 import com.timekeep.front.GroupSelectionPresenter;
-import com.timekeep.front.PrimaryPresenter;
 
 public class GroupConnector {
   private String name;
@@ -29,7 +32,14 @@ public class GroupConnector {
     Group group = new Group(name);
     GroupService.store(group);
     GroupSelectionPresenter.addGroup(group);
-    //PrimaryPresenter.refresh();
     return group;
+  }
+
+  public Entry addStartEntry() {
+    StrictDate date = DateService.today();
+    StrictTime time = DateService.now();
+    Entry newEntry = new Entry(date, time, DateService.INVALID_TIME, "", DateService.INVALID_TIME);
+
+    return newEntry;
   }
 }
