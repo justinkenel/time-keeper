@@ -2,7 +2,7 @@ package com.timekeep.data;
 
 import java.io.Serializable;
 
-public class Entry implements Serializable {
+public class Entry implements Serializable, Comparable<Entry> {
   public final StrictDate date;
   public final StrictTime start;
   public final StrictTime end;
@@ -30,5 +30,18 @@ public class Entry implements Serializable {
         end.equals(((Entry) o).end) &&
         jobsite.equals(((Entry) o).jobsite) &&
         drive.equals(((Entry) o).drive);
+  }
+
+  @Override
+  public int compareTo(Entry entry) {
+    int dateDifference = date.compareTo(entry.date);
+
+    if (dateDifference != 0) {
+      return dateDifference;
+    }
+
+    int startDifference = start.compareTo(entry.start);
+
+    return startDifference != 0 ? startDifference : end.compareTo(entry.end);
   }
 }

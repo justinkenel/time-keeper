@@ -9,7 +9,7 @@ public class EntryService {
   private static final StorageService.StorageObjectListConverter<Entry> storageObjectListConverter;
 
   static {
-    String dbName = PropertiesService.getEntryDataName();
+    String dbName = PropertiesService.getEmployeeEntryDataName();
     multiStorageAccess = StorageService.buildMultiStorageAccess(dbName);
     storageObjectListConverter = StorageService.buildStorageObjectListConverter(Entry.class);
   }

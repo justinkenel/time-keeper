@@ -2,7 +2,7 @@ package com.timekeep.data;
 
 import java.io.Serializable;
 
-public class StrictTime implements Serializable {
+public class StrictTime implements Serializable, Comparable<StrictTime> {
   public final int hour;
   public final int minute;
 
@@ -15,5 +15,11 @@ public class StrictTime implements Serializable {
     return (o instanceof StrictTime) &&
         ((StrictTime) o).hour == hour &&
         ((StrictTime) o).minute == minute;
+  }
+
+  @Override
+  public int compareTo(StrictTime strictTime) {
+    int hourDifference = hour - strictTime.hour;
+    return hourDifference != 0 ? hourDifference : minute - strictTime.minute;
   }
 }
