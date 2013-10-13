@@ -21,7 +21,7 @@ public class PayrollSummary {
     }
 
     public EmployeeSummary getEmployeeSummaryForDate(StrictDate date) {
-      List<Entry> entryListForDate = new ArrayList<>();
+      List<Entry> entryListForDate = new ArrayList<Entry>();
       for (Entry entry : entryList) {
         if (entry.date.equals(date)) {
           entryListForDate.add(entry);
@@ -69,7 +69,7 @@ public class PayrollSummary {
     }
 
     public GroupSummary getGroupSummaryForDate(StrictDate date) {
-      List<EmployeeSummary> employeeSummaryListForDate = new ArrayList<>();
+      List<EmployeeSummary> employeeSummaryListForDate = new ArrayList<EmployeeSummary>();
 
       for (EmployeeSummary employeeSummary : employeeSummaryList) {
         EmployeeSummary employeeSummaryForDate = employeeSummary.getEmployeeSummaryForDate(date);
@@ -119,7 +119,7 @@ public class PayrollSummary {
     Employee employee = EmployeeService.getEmployee(facade.getName());
 
     List<Entry> entryList = facade.getEntries();
-    List<Entry> summaryEntryList = new ArrayList<>();
+    List<Entry> summaryEntryList = new ArrayList<Entry>();
 
     for (Entry entry : entryList) {
       if (entry.between(startEntry, endEntry)) {
@@ -134,7 +134,7 @@ public class PayrollSummary {
     Group group = GroupService.load(facade.getName());
 
     Iterable<EmployeeFacade> employeeFacadeList = facade.getEmployees();
-    List<EmployeeSummary> employeeSummaryList = new ArrayList<>();
+    List<EmployeeSummary> employeeSummaryList = new ArrayList<EmployeeSummary>();
 
     for (EmployeeFacade employeeFacade : employeeFacadeList) {
       EmployeeSummary employeeSummary = buildEmployeeSummary(employeeFacade, startEntry, endEntry);
@@ -145,7 +145,7 @@ public class PayrollSummary {
   }
 
   public static PayrollSummary build(StrictDate start, StrictDate end) {
-    List<GroupSummary> groupSummaryList = new ArrayList<>();
+    List<GroupSummary> groupSummaryList = new ArrayList<GroupSummary>();
     Iterable<Group> groupList = GroupService.getGroups();
 
     StrictTime zeroTime = DateService.ZERO_TIME;
@@ -162,7 +162,7 @@ public class PayrollSummary {
   }
 
   public PayrollSummary buildForDate(StrictDate date) {
-    List<GroupSummary> groupSummaryListForDate = new ArrayList<>();
+    List<GroupSummary> groupSummaryListForDate = new ArrayList<GroupSummary>();
     for (GroupSummary groupSummary : groupSummaryList) {
       groupSummaryListForDate.add(groupSummary.getGroupSummaryForDate(date));
     }

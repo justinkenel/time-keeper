@@ -26,6 +26,7 @@ public class EmployeeConnectorTest {
   public void testCreateAndStore() {
     Employee employee = EmployeeConnector.connector("employee-name").
         setGroup("group-name").
+        setType("type-name").
         setRate(100).
         createAndStore();
 
