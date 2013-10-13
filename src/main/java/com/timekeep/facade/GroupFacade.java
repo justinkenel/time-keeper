@@ -15,7 +15,11 @@ public class GroupFacade {
     this.name = name;
   }
 
-  public Iterable<EmployeeFacade> getEmployees() {
+  public String getName() {
+    return name;
+  }
+
+  public List<EmployeeFacade> getEmployees() {
     List<EmployeeFacade> employeeList = new ArrayList<EmployeeFacade>();
 
     for (Employee employee : EmployeeService.getEmployees()) {

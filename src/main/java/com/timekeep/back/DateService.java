@@ -24,6 +24,8 @@ public class DateService {
   public static final StrictDate INVALID_DATE = new StrictDate(-1, -1, -1);
   public static final StrictTime INVALID_TIME = new StrictTime(-1, -1);
 
+  public static final StrictTime ZERO_TIME = new StrictTime(0, 0);
+
   public static StrictDate date(String dateString) {
     if (dateString.equals("")) {
       return INVALID_DATE;

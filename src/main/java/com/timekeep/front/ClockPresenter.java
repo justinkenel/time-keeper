@@ -18,8 +18,6 @@ public class ClockPresenter {
 
   private enum ClockState {DISABLE_CLOCK_IN, DISABLE_CLOCK_OUT, DISABLE_NONE}
 
-  ;
-
   private static interface ClockBehavior {
     void clockIn(String target);
 

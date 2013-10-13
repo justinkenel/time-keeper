@@ -44,4 +44,9 @@ public class Entry implements Serializable, Comparable<Entry> {
 
     return startDifference != 0 ? startDifference : end.compareTo(entry.end);
   }
+
+
+  public boolean between(Entry before, Entry after) {
+    return before.compareTo(this) <= 0 && this.compareTo(after) <= 0;
+  }
 }

@@ -17,6 +17,10 @@ public class EmployeeFacade {
     return name;
   }
 
+  public List<Entry> getEntries() {
+    return EntryService.retrieve(name);
+  }
+
   public Entry addEntry(Entry entry) {
     List<Entry> entryList = EntryService.retrieve(name);
     entryList.add(0, entry);
